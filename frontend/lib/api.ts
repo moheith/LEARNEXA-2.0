@@ -32,9 +32,13 @@ export async function apiRequest<T = any>(
     const url = `${API_BASE_URL}${endpoint}`;
     const token = getToken();
 
-    const headers = {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...(options.headers instanceof Headers
+        ? Object.fromEntries(options.headers.entries())
+        : typeof options.headers === "object" && options.headers
+          ? (options.headers as Record<string, string>)
+          : {}),
     };
 
     if (token) {
