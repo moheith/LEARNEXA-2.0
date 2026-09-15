@@ -248,9 +248,17 @@ def feedback(user):
     s=db.session.get(Session,data.get("session_id"))
     if not s: return jsonify({"error":"Session not found"}),404
     r=db.session.get(ExchangeRequest,s.request_id)
+    if not r or user.id not in [r.sender_id, r.receiver_id]:
+        return jsonify({"error":"Session not found"}),404
+    try:
+        rating = int(data.get("rating", 5))
+    except (TypeError, ValueError):
+        return jsonify({"error":"Rating must be a number"}),400
+    if rating < 1 or rating > 5:
+        return jsonify({"error":"Rating must be between 1 and 5"}),400
     reviewee=r.receiver_id if r.sender_id==user.id else r.sender_id
     f=Feedback(session_id=s.id,reviewer_id=user.id,reviewee_id=reviewee,
-               rating=int(data.get("rating",5)),comment=data.get("comment",""))
+               rating=rating,comment=data.get("comment",""))
     db.session.add(f); db.session.commit()
     return jsonify({"message":"Feedback submitted"}),201
 
@@ -342,9 +350,25 @@ def update_session(user, sid):
     db.session.commit()
     return jsonify({"message": "Session updated"})
 
+DEFAULT_SKILLS = [
+    ("Python", "Programming"), ("Java", "Programming"), ("JavaScript", "Programming"),
+    ("HTML", "Web"), ("CSS", "Web"), ("React", "Web"), ("Next.js", "Web"),
+    ("MySQL", "Database"), ("Data Science", "AI/Data"), ("Machine Learning", "AI/Data"),
+    ("Graphic Design", "Design"), ("Video Editing", "Creative"), ("Communication", "Soft Skills"),
+    ("English", "Language"), ("Public Speaking", "Soft Skills"),
+]
+
 with app.app_context():
-    # Tables are expected to exist from schema.sql. This also creates any missing tables.
+    # Tables are expected to exist from schema.sql (production/MySQL).
+    # This also creates any missing tables for local SQLite development.
     db.create_all()
+
+    # For local SQLite dev, schema.sql's seed data never runs, so the skills
+    # table would otherwise be empty and nobody could select any skills.
+    if Skill.query.count() == 0:
+        for name, category in DEFAULT_SKILLS:
+            db.session.add(Skill(name=name, category=category))
+        db.session.commit()
 
 if __name__=="__main__":
     app.run(debug=True, port=5000)
