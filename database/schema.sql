@@ -61,6 +61,25 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (reviewee_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS wallets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    security_amount FLOAT DEFAULT 0,
+    reward_points INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS wallet_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount FLOAT NOT NULL,
+    type VARCHAR(30) NOT NULL,
+    status VARCHAR(30) DEFAULT 'completed',
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 INSERT IGNORE INTO skills (name, category) VALUES
 ('Python','Programming'),('Java','Programming'),('JavaScript','Programming'),
 ('HTML','Web'),('CSS','Web'),('React','Web'),('Next.js','Web'),

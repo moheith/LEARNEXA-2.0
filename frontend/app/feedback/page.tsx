@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
 type Session = {
   id: number;
   title: string;
@@ -41,7 +43,7 @@ export default function FeedbackPage() {
         return;
       }
 
-      const response = await fetch("http://127.0.0.1:5000/api/sessions", {
+      const response = await fetch(`${API_BASE}/sessions`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -103,7 +105,7 @@ export default function FeedbackPage() {
       }
 
       const response = await fetch(
-        "http://127.0.0.1:5000/api/feedback",
+        `${API_BASE}/feedback`,
         {
           method: "POST",
           headers: {

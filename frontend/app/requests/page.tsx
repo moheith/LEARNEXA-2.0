@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
 type RequestItem = {
   id: number;
   sender_id: number;
@@ -38,7 +40,7 @@ export default function RequestsPage() {
 
     try {
       const meResponse = await fetch(
-        "http://127.0.0.1:5000/api/me",
+        `${API_BASE}/me`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +58,7 @@ export default function RequestsPage() {
       setUser(me);
 
       const response = await fetch(
-        "http://127.0.0.1:5000/api/requests",
+        `${API_BASE}/requests`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -97,7 +99,7 @@ export default function RequestsPage() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/requests/${requestId}`,
+        `${API_BASE}/requests/${requestId}`,
         {
           method: "PATCH",
           headers: {

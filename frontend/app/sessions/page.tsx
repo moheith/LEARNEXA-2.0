@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
 type Session = {
   id: number;
   request_id?: number;
@@ -60,13 +62,13 @@ export default function SessionsPage() {
 
     try {
       const [sessionResponse, requestResponse] = await Promise.all([
-        fetch("http://127.0.0.1:5000/api/sessions", {
+        fetch(`${API_BASE}/sessions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }),
 
-        fetch("http://127.0.0.1:5000/api/requests", {
+        fetch(`${API_BASE}/requests`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -127,7 +129,7 @@ export default function SessionsPage() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/sessions",
+        `${API_BASE}/sessions`,
         {
           method: "POST",
           headers: {
@@ -200,7 +202,7 @@ export default function SessionsPage() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/sessions/${sessionId}`,
+        `${API_BASE}/sessions/${sessionId}`,
         {
           method: "PATCH",
           headers: {

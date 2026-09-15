@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
 type Transaction = {
   id: number;
   amount: number;
@@ -44,7 +46,7 @@ export default function WalletPage() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/wallet",
+        `${API_BASE}/wallet`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,7 +102,7 @@ export default function WalletPage() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/wallet/security",
+        `${API_BASE}/wallet/security`,
         {
           method: "POST",
 
@@ -159,7 +161,7 @@ export default function WalletPage() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/wallet/redeem",
+        `${API_BASE}/wallet/redeem`,
         {
           method: "POST",
 

@@ -5,17 +5,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
 
-export default function RegisterPage() {
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
+export default function LoginPage() {
   const router = useRouter();
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleRegister(e: FormEvent) {
+  async function handleLogin(e: FormEvent) {
     e.preventDefault();
 
     setError("");
@@ -23,14 +24,13 @@ export default function RegisterPage() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/register",
+        `${API_BASE}/login`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name,
             email,
             password,
           }),
@@ -40,11 +40,13 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || data.error || "Registration failed.");
+        setError(data.message || data.error || "Login failed.");
         return;
       }
 
-      router.push("/login");
+      localStorage.setItem("token", data.token);
+
+      router.push("/");
     } catch (error) {
       setError("Unable to connect to the server.");
     } finally {
@@ -70,17 +72,17 @@ export default function RegisterPage() {
           </Link>
 
           <p className="mt-3 text-slate-500">
-            Create your student account.
+            Welcome back! Login to continue.
           </p>
         </div>
 
         <form
-          onSubmit={handleRegister}
+          onSubmit={handleLogin}
           className="rounded-3xl border bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900"
         >
 
           <h1 className="text-2xl font-bold">
-            Create Account
+            Login
           </h1>
 
           {error && (
@@ -91,21 +93,6 @@ export default function RegisterPage() {
 
           <div className="mt-6">
             <label className="text-sm font-medium">
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-violet-500 dark:border-slate-700 dark:bg-slate-800"
-              placeholder="Your name"
-            />
-          </div>
-
-          <div className="mt-5">
-            <label className="text-sm font-medium">
               Email
             </label>
 
@@ -114,8 +101,8 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-violet-500 dark:border-slate-700 dark:bg-slate-800"
               placeholder="you@example.com"
+              className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-violet-500 dark:border-slate-700 dark:bg-slate-800"
             />
           </div>
 
@@ -129,9 +116,8 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              placeholder="Enter your password"
               className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-violet-500 dark:border-slate-700 dark:bg-slate-800"
-              placeholder="Minimum 6 characters"
             />
           </div>
 
@@ -140,16 +126,16 @@ export default function RegisterPage() {
             disabled={loading}
             className="mt-7 w-full rounded-xl bg-violet-600 py-3 font-medium text-white hover:bg-violet-700 disabled:opacity-50"
           >
-            {loading ? "Creating account..." : "Register"}
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <p className="mt-6 text-center text-sm text-slate-500">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              href="/login"
+              href="/register"
               className="font-medium text-violet-600"
             >
-              Login
+              Create one
             </Link>
           </p>
 

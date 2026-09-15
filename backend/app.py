@@ -78,6 +78,23 @@ class Feedback(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text)
 
+class Wallet(db.Model):
+    __tablename__ = "wallets"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True, nullable=False)
+    security_amount = db.Column(db.Float, default=0)
+    reward_points = db.Column(db.Integer, default=0)
+
+class WalletTransaction(db.Model):
+    __tablename__ = "wallet_transactions"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    type = db.Column(db.String(30), nullable=False)     # "security_deposit" | "redeem"
+    status = db.Column(db.String(30), default="completed")
+    description = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 def token_for(user_id):
     return jwt.encode({"user_id": user_id, "exp": datetime.utcnow()+timedelta(hours=12)}, SECRET, algorithm="HS256")
 
@@ -236,6 +253,94 @@ def feedback(user):
                rating=int(data.get("rating",5)),comment=data.get("comment",""))
     db.session.add(f); db.session.commit()
     return jsonify({"message":"Feedback submitted"}),201
+
+def get_or_create_wallet(user_id):
+    wallet = Wallet.query.filter_by(user_id=user_id).first()
+    if not wallet:
+        wallet = Wallet(user_id=user_id, security_amount=0, reward_points=0)
+        db.session.add(wallet)
+        db.session.commit()
+    return wallet
+
+@app.get("/api/wallet")
+@auth_required
+def get_wallet(user):
+    wallet = get_or_create_wallet(user.id)
+    txns = WalletTransaction.query.filter_by(user_id=user.id).order_by(WalletTransaction.created_at.desc()).all()
+    return jsonify({
+        "balance": wallet.security_amount,
+        "security_amount": wallet.security_amount,
+        "reward_points": wallet.reward_points,
+        "transactions": [{
+            "id": t.id, "amount": t.amount, "type": t.type, "status": t.status,
+            "description": t.description or "", "created_at": t.created_at.isoformat()
+        } for t in txns]
+    })
+
+@app.post("/api/wallet/security")
+@auth_required
+def add_security_amount(user):
+    data = request.json or {}
+    amount = data.get("amount")
+    try:
+        amount = float(amount)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Enter a valid amount"}), 400
+    if amount <= 0:
+        return jsonify({"error": "Amount must be greater than zero"}), 400
+
+    wallet = get_or_create_wallet(user.id)
+    wallet.security_amount += amount
+    # Reward the student with points for building up their security amount.
+    wallet.reward_points += int(amount // 10)
+    db.session.add(WalletTransaction(
+        user_id=user.id, amount=amount, type="security_deposit",
+        status="completed", description="Security amount added"
+    ))
+    db.session.commit()
+    return jsonify({"message": "Security amount added", "balance": wallet.security_amount,
+                     "reward_points": wallet.reward_points}), 201
+
+@app.post("/api/wallet/redeem")
+@auth_required
+def redeem_points(user):
+    data = request.json or {}
+    points = data.get("points")
+    try:
+        points = int(points)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Enter a valid number of points"}), 400
+    if points <= 0:
+        return jsonify({"error": "Points must be greater than zero"}), 400
+
+    wallet = get_or_create_wallet(user.id)
+    if wallet.reward_points < points:
+        return jsonify({"error": "Not enough reward points"}), 400
+
+    wallet.reward_points -= points
+    db.session.add(WalletTransaction(
+        user_id=user.id, amount=points, type="redeem",
+        status="completed", description=f"Redeemed {points} reward points"
+    ))
+    db.session.commit()
+    return jsonify({"message": "Points redeemed", "reward_points": wallet.reward_points}), 200
+
+@app.patch("/api/sessions/<int:sid>")
+@auth_required
+def update_session(user, sid):
+    s = db.session.get(Session, sid)
+    if not s:
+        return jsonify({"error": "Session not found"}), 404
+    r = db.session.get(ExchangeRequest, s.request_id)
+    if not r or user.id not in [r.sender_id, r.receiver_id]:
+        return jsonify({"error": "Session not found"}), 404
+
+    status = (request.json or {}).get("status")
+    if status not in ["completed", "cancelled"]:
+        return jsonify({"error": "Invalid status"}), 400
+    s.status = status
+    db.session.commit()
+    return jsonify({"message": "Session updated"})
 
 with app.app_context():
     # Tables are expected to exist from schema.sql. This also creates any missing tables.

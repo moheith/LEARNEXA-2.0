@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+
 type Skill = {
   id: number;
   name: string;
@@ -57,7 +59,7 @@ export default function Dashboard() {
       try {
         // Load user profile
         const userResponse = await fetch(
-          "http://127.0.0.1:5000/api/me",
+          `${API_BASE}/me`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -98,7 +100,7 @@ export default function Dashboard() {
 
         // Load AI recommendations
         const recommendationResponse = await fetch(
-          "http://127.0.0.1:5000/api/recommendations",
+          `${API_BASE}/recommendations`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -190,7 +192,7 @@ export default function Dashboard() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/requests",
+        `${API_BASE}/requests`,
         {
           method: "POST",
           headers: {

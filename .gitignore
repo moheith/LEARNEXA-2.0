@@ -1,8 +1,9 @@
-﻿backend/env/
+backend/.env
+backend/env
 backend/__pycache__/
 backend/*.pyc
-backend/.env
 backend/instance/*.db
+backend/learnexa.db
 frontend/node_modules/
 frontend/.next/
 frontend/out/
