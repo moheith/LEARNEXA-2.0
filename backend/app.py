@@ -1,3 +1,5 @@
+"""LEARNEXA API: authentication, skill matching, exchanges, sessions, and wallet."""
+
 import os
 from datetime import datetime, timedelta
 from functools import wraps
@@ -14,8 +16,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
-# Use SQLite for development, MySQL for production
+
+# Frontend origins allowed during local development. Set CORS_ORIGINS in production.
+cors_origins = os.getenv(
+    "CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
+).split(",")
+CORS(app, origins=[origin.strip() for origin in cors_origins])
+
+# SQLite keeps local setup simple; MySQL can be selected for deployment.
 db_type = os.getenv('DB_TYPE', 'sqlite')
 if db_type == 'mysql':
     app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -27,6 +35,10 @@ else:
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 SECRET = os.getenv("JWT_SECRET", "learnexa-demo-secret")
+
+# -----------------------------------------------------------------------------
+# Database models
+# -----------------------------------------------------------------------------
 
 class User(db.Model):
     __tablename__ = "users"
@@ -95,6 +107,10 @@ class WalletTransaction(db.Model):
     description = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# -----------------------------------------------------------------------------
+# Authentication helpers
+# -----------------------------------------------------------------------------
+
 def token_for(user_id):
     return jwt.encode({"user_id": user_id, "exp": datetime.utcnow()+timedelta(hours=12)}, SECRET, algorithm="HS256")
 
@@ -111,6 +127,10 @@ def auth_required(fn):
             return jsonify({"error":"Unauthorized"}), 401
     return wrapper
 
+# -----------------------------------------------------------------------------
+# Public and profile routes
+# -----------------------------------------------------------------------------
+
 @app.get("/api/health")
 def health():
     return jsonify({"status":"ok","message":"LEARNEXA API is running"})
@@ -118,12 +138,16 @@ def health():
 @app.post("/api/register")
 def register():
     data = request.json or {}
-    if not data.get("name") or not data.get("email") or not data.get("password"):
+    name = str(data.get("name", "")).strip()
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", ""))
+    if not name or not email or not password:
         return jsonify({"error":"Name, email and password are required"}), 400
-    if User.query.filter_by(email=data["email"]).first():
+    if len(password) < 6:
+        return jsonify({"error":"Password must be at least 6 characters"}), 400
+    if User.query.filter_by(email=email).first():
         return jsonify({"error":"Email already registered"}), 409
-    u = User(name=data["name"], email=data["email"].lower(),
-             password_hash=generate_password_hash(data["password"]))
+    u = User(name=name, email=email, password_hash=generate_password_hash(password))
     db.session.add(u); db.session.commit()
     return jsonify({"message":"Registration successful","token":token_for(u.id),"user":{"id":u.id,"name":u.name,"email":u.email}}), 201
 
@@ -158,12 +182,17 @@ def profile(user):
     for typ in ["teach","learn"]:
         for old in UserSkill.query.filter_by(user_id=user.id, skill_type=typ).all():
             db.session.delete(old)
-    for typ in ["teach","learn"]:
-        for sid in data.get(typ, []):
+    for typ in ["teach", "learn"]:
+        skill_ids = data.get(typ, data.get(f"{typ}_skills", []))
+        for sid in skill_ids:
             if db.session.get(Skill, sid):
                 db.session.add(UserSkill(user_id=user.id, skill_id=sid, skill_type=typ))
     db.session.commit()
     return jsonify({"message":"Profile updated"})
+
+# -----------------------------------------------------------------------------
+# Matching and exchange-request routes
+# -----------------------------------------------------------------------------
 
 def names_for(user_id, typ):
     return [x.skill.name.lower() for x in UserSkill.query.filter_by(user_id=user_id, skill_type=typ).all()]
@@ -206,8 +235,11 @@ def get_requests(user):
     out=[]
     for r in rows:
         sender=db.session.get(User,r.sender_id); receiver=db.session.get(User,r.receiver_id)
-        out.append({"id":r.id,"sender":sender.name,"receiver":receiver.name,"sender_id":r.sender_id,
-                    "receiver_id":r.receiver_id,"message":r.message or "","status":r.status})
+        out.append({"id":r.id,"sender":sender.name,"receiver":receiver.name,
+                "sender_name":sender.name,"receiver_name":receiver.name,
+                "sender_id":r.sender_id,"receiver_id":r.receiver_id,
+                "message":r.message or "","status":r.status,
+                "created_at":r.created_at.isoformat() if r.created_at else None})
     return jsonify(out)
 
 @app.patch("/api/requests/<int:rid>")
@@ -219,6 +251,10 @@ def update_request(user,rid):
     if status not in ["accepted","rejected"]: return jsonify({"error":"Invalid status"}),400
     r.status=status; db.session.commit()
     return jsonify({"message":"Request updated"})
+
+# -----------------------------------------------------------------------------
+# Session and feedback routes
+# -----------------------------------------------------------------------------
 
 @app.post("/api/sessions")
 @auth_required
@@ -250,6 +286,10 @@ def feedback(user):
     r=db.session.get(ExchangeRequest,s.request_id)
     if not r or user.id not in [r.sender_id, r.receiver_id]:
         return jsonify({"error":"Session not found"}),404
+    if s.status != "completed":
+        return jsonify({"error":"Feedback is available after the session is completed"}),400
+    if Feedback.query.filter_by(session_id=s.id, reviewer_id=user.id).first():
+        return jsonify({"error":"You already submitted feedback for this session"}),409
     try:
         rating = int(data.get("rating", 5))
     except (TypeError, ValueError):
@@ -261,6 +301,10 @@ def feedback(user):
                rating=rating,comment=data.get("comment",""))
     db.session.add(f); db.session.commit()
     return jsonify({"message":"Feedback submitted"}),201
+
+# -----------------------------------------------------------------------------
+# Wallet routes
+# -----------------------------------------------------------------------------
 
 def get_or_create_wallet(user_id):
     wallet = Wallet.query.filter_by(user_id=user_id).first()
@@ -331,7 +375,8 @@ def redeem_points(user):
         status="completed", description=f"Redeemed {points} reward points"
     ))
     db.session.commit()
-    return jsonify({"message": "Points redeemed", "reward_points": wallet.reward_points}), 200
+    return jsonify({"message": "Points redeemed", "reward_points": wallet.reward_points,
+                    "demo_value": round(points / 10, 2)}), 200
 
 @app.patch("/api/sessions/<int:sid>")
 @auth_required
@@ -349,6 +394,10 @@ def update_session(user, sid):
     s.status = status
     db.session.commit()
     return jsonify({"message": "Session updated"})
+
+# -----------------------------------------------------------------------------
+# Local database initialization
+# -----------------------------------------------------------------------------
 
 DEFAULT_SKILLS = [
     ("Python", "Programming"), ("Java", "Programming"), ("JavaScript", "Programming"),

@@ -39,7 +39,7 @@ export default function ThemeToggle() {
       aria-label="Change theme"
       title="Change theme"
     >
-      {darkMode ? "☀ Light" : "☾ Dark"}
+      {darkMode ? "Light mode" : "Dark mode"}
     </button>
   );
 }

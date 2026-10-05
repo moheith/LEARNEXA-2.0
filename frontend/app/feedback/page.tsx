@@ -63,7 +63,7 @@ export default function FeedbackPage() {
         ? data.sessions
         : [];
 
-      setSessions(sessionList);
+      setSessions(sessionList.filter((session: Session) => session.status === "completed"));
     } catch (error) {
       console.error("Failed to load sessions:", error);
     } finally {

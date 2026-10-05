@@ -183,9 +183,7 @@ export default function WalletPage() {
         return;
       }
 
-      setMessage(
-        `${points} points redeemed for ₹${data.demo_value}.`
-      );
+      setMessage(`${points} reward points redeemed successfully.`);
 
       await loadWallet();
     } catch (error) {
@@ -211,10 +209,10 @@ export default function WalletPage() {
 
   function transactionLabel(type: string) {
     switch (type) {
-      case "security_hold":
+      case "security_deposit":
         return "Security Amount";
 
-      case "reward":
+      case "redeem":
         return "Reward Redemption";
 
       default:

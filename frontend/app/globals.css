@@ -3,23 +3,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f5f7fa;
-  --foreground: #17202a;
+  --background: #f4f8f7;
+  --foreground: #172b2a;
   --card: #ffffff;
-  --border: #dfe4ea;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --muted: #667085;
+  --border: #d6e3e0;
+  --primary: #0f766e;
+  --primary-dark: #115e59;
+  --accent: #f59e0b;
+  --muted: #607572;
 }
 
 .dark {
-  --background: #111827;
-  --foreground: #f3f4f6;
-  --card: #1f2937;
-  --border: #374151;
-  --primary: #60a5fa;
-  --primary-dark: #3b82f6;
-  --muted: #9ca3af;
+  --background: #10201f;
+  --foreground: #edf7f4;
+  --card: #18302e;
+  --border: #2b4b47;
+  --primary: #5eead4;
+  --primary-dark: #2dd4bf;
+  --accent: #fbbf24;
+  --muted: #a9c2bd;
 }
 
 * {
@@ -35,7 +37,9 @@ body {
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background-image: radial-gradient(circle at 10% 0%, rgba(20, 184, 166, 0.1), transparent 28rem),
+    radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.08), transparent 24rem);
 }
 
 button,
@@ -47,6 +51,20 @@ select {
 
 button {
   cursor: pointer;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  transition: border-color 160ms ease, background-color 160ms ease,
+    color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+::selection {
+  background: var(--primary);
+  color: #ffffff;
 }
 
 a {
@@ -82,6 +100,7 @@ a {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(15, 118, 110, 0.06);
 }
 
 /* Form fields */
@@ -98,6 +117,7 @@ a {
 
 .form-input:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 /* Main button */

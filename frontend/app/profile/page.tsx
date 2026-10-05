@@ -1,5 +1,4 @@
 "use client";
-//abc
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -74,13 +73,13 @@ export default function ProfilePage() {
       }
 
       setTeachSkills(
-        (userData.teach_skills || []).map(
+        (userData.teach || userData.teach_skills || []).map(
           (skill: Skill) => skill.id
         )
       );
 
       setLearnSkills(
-        (userData.learn_skills || []).map(
+        (userData.learn || userData.learn_skills || []).map(
           (skill: Skill) => skill.id
         )
       );
@@ -138,8 +137,8 @@ export default function ProfilePage() {
           body: JSON.stringify({
             bio,
             availability,
-            teach_skills: teachSkills,
-            learn_skills: learnSkills,
+            teach: teachSkills,
+            learn: learnSkills,
           }),
         }
       );
