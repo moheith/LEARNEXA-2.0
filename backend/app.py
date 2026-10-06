@@ -3,6 +3,7 @@
 import os
 from datetime import datetime, timedelta
 from functools import wraps
+from pathlib import Path
 
 import jwt
 from dotenv import load_dotenv
@@ -31,7 +32,9 @@ if db_type == 'mysql':
         f"@{os.getenv('DB_HOST','localhost')}:{os.getenv('DB_PORT','3306')}/{os.getenv('DB_NAME','learnexa')}"
     )
 else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///learnexa.db"
+    sqlite_path = Path(app.root_path) / "instance" / "learnexa.db"
+    sqlite_path.parent.mkdir(parents=True, exist_ok=True)
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sqlite_path.as_posix()}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 SECRET = os.getenv("JWT_SECRET", "learnexa-demo-secret")

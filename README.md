@@ -55,6 +55,8 @@ Flask-SQLAlchemy creates this database automatically when the backend starts. In
 backend/instance/learnexa.db
 ```
 
+The backend resolves this path from `backend/app.py`, so starting the server from the repository root or the backend folder uses the same database. Do not create or inspect a second `instance/learnexa.db` at the repository root.
+
 For this college demonstration, the fictional SQLite database is included in GitHub so the project opens with sample records. Do not use this setup for a real application. A real project should keep its database outside Git and use migrations or a separate seed process.
 
 ### Deployment: MySQL
