@@ -2,6 +2,8 @@
 
 LEARNEXA is a college-project web application for exchanging skills between students. A student can say what they can teach, what they want to learn, discover compatible students, send an exchange request, schedule a session, leave feedback, and earn reward points.
 
+This repository is for college demonstration and learning only. The bundled database contains fictional demo data. If you reuse this project, edit the sample records, skills, and configuration for your own requirements.
+
 ## Project Structure
 
 ```text
@@ -53,7 +55,7 @@ Flask-SQLAlchemy creates this database automatically when the backend starts. In
 backend/instance/learnexa.db
 ```
 
-The local SQLite database is ignored by Git because it contains changing user data and should not be committed.
+For this college demonstration, the fictional SQLite database is included in GitHub so the project opens with sample records. Do not use this setup for a real application. A real project should keep its database outside Git and use migrations or a separate seed process.
 
 ### Deployment: MySQL
 
@@ -71,7 +73,7 @@ The file [database/schema.sql](database/schema.sql) contains the MySQL version o
 
 ### `users`
 
-Stores one record per student: name, email, hashed password, biography, and availability. Passwords are never stored as plain text.
+Stores one record per student: name, email, hashed password, biography, and availability. Passwords are never stored as plain text, even in this demonstration project.
 
 ### `skills`
 
