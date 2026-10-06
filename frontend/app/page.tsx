@@ -3,6 +3,20 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Clock3,
+  Inbox,
+  LayoutDashboard,
+  MessageSquareText,
+  Search,
+  SearchX,
+  Star,
+  UserRound,
+  WalletCards,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const API_BASE =
@@ -303,7 +317,7 @@ export default function Dashboard() {
           {/* Search */}
           <div className="relative flex-1">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-              🔍
+              <Search size={17} strokeWidth={1.8} />
             </span>
 
             <input
@@ -357,38 +371,38 @@ export default function Dashboard() {
 
               <SidebarLink
                 href="/"
-                icon="▣"
+                icon={LayoutDashboard}
                 label="Dashboard"
                 active
               />
 
               <SidebarLink
                 href="/profile"
-                icon="👤"
+                icon={UserRound}
                 label="My Profile"
               />
 
               <SidebarLink
                 href="/requests"
-                icon="↗"
+                icon={ArrowUpRight}
                 label="Requests"
               />
 
               <SidebarLink
                 href="/sessions"
-                icon="◷"
+                icon={Clock3}
                 label="Sessions"
               />
 
               <SidebarLink
                 href="/feedback"
-                icon="★"
+                icon={Star}
                 label="Feedback"
               />
 
               <SidebarLink
                 href="/wallet"
-                icon="◉"
+                icon={WalletCards}
                 label="Wallet"
               />
 
@@ -424,32 +438,32 @@ export default function Dashboard() {
 
             <MobileNavLink
               href="/"
-              icon="▣"
+              icon={LayoutDashboard}
               label="Home"
               active
             />
 
             <MobileNavLink
               href="/profile"
-              icon="👤"
+              icon={UserRound}
               label="Profile"
             />
 
             <MobileNavLink
               href="/requests"
-              icon="↗"
+              icon={ArrowUpRight}
               label="Requests"
             />
 
             <MobileNavLink
               href="/sessions"
-              icon="◷"
+              icon={Clock3}
               label="Sessions"
             />
 
             <MobileNavLink
               href="/wallet"
-              icon="◉"
+              icon={WalletCards}
               label="Wallet"
             />
 
@@ -614,7 +628,7 @@ export default function Dashboard() {
                 <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
 
                   <div className="text-3xl">
-                    🔍
+                    <SearchX size={34} strokeWidth={1.5} />
                   </div>
 
                   <h3 className="mt-3 font-bold">
@@ -678,28 +692,28 @@ export default function Dashboard() {
                   href="/requests"
                   title="Requests"
                   description="View and manage learning requests."
-                  icon="📩"
+                  icon={Inbox}
                 />
 
                 <QuickLink
                   href="/sessions"
                   title="Sessions"
                   description="Schedule and manage skill sessions."
-                  icon="📅"
+                  icon={CalendarDays}
                 />
 
                 <QuickLink
                   href="/feedback"
                   title="Feedback"
                   description="Rate completed learning exchanges."
-                  icon="⭐"
+                  icon={MessageSquareText}
                 />
 
                 <QuickLink
                   href="/wallet"
                   title="Wallet & Rewards"
                   description="View security amounts and reward points."
-                  icon="💰"
+                  icon={WalletCards}
                 />
 
               </div>
@@ -750,10 +764,12 @@ function SidebarLink({
   active = false,
 }: {
   href: string;
-  icon: string;
+  icon: LucideIcon;
   label: string;
   active?: boolean;
 }) {
+  const Icon = icon;
+
   return (
     <Link
       href={href}
@@ -770,7 +786,7 @@ function SidebarLink({
             : "bg-slate-100 dark:bg-slate-800"
         }`}
       >
-        {icon}
+        <Icon size={16} strokeWidth={1.8} />
       </span>
 
       {label}
@@ -790,10 +806,12 @@ function MobileNavLink({
   active = false,
 }: {
   href: string;
-  icon: string;
+  icon: LucideIcon;
   label: string;
   active?: boolean;
 }) {
+  const Icon = icon;
+
   return (
     <Link
       href={href}
@@ -803,7 +821,7 @@ function MobileNavLink({
           : "text-slate-500 dark:text-slate-400"
       }`}
     >
-      <span className="text-base">{icon}</span>
+      <span className="text-base"><Icon size={16} strokeWidth={1.8} /></span>
       {label}
     </Link>
   );
@@ -1126,16 +1144,18 @@ function QuickLink({
   href: string;
   title: string;
   description: string;
-  icon: string;
+  icon: LucideIcon;
 }) {
+  const Icon = icon;
+
   return (
     <Link
       href={href}
       className="group rounded-xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:border-blue-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800"
     >
 
-      <div className="text-2xl transition-transform duration-200 group-hover:scale-110">
-        {icon}
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700 transition-transform duration-200 group-hover:scale-110 dark:bg-teal-950/50 dark:text-teal-300">
+        <Icon size={20} strokeWidth={1.8} />
       </div>
 
       <h3 className="mt-3 font-bold">
@@ -1146,8 +1166,8 @@ function QuickLink({
         {description}
       </p>
 
-      <p className="mt-4 text-xs font-bold text-blue-600">
-        Open →
+      <p className="mt-4 flex items-center gap-1 text-xs font-bold text-teal-700 dark:text-teal-300">
+        Open <ArrowUpRight size={14} strokeWidth={1.8} />
       </p>
 
     </Link>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Check, Plus } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
@@ -450,7 +451,7 @@ export default function ProfilePage() {
                               : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                           }`}
                         >
-                          {selected ? "✓" : "+"}
+                          {selected ? <Check size={14} /> : <Plus size={14} />}
                         </span>
 
                       </div>
@@ -527,7 +528,7 @@ export default function ProfilePage() {
                               : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                           }`}
                         >
-                          {selected ? "✓" : "+"}
+                          {selected ? <Check size={14} /> : <Plus size={14} />}
                         </span>
 
                       </div>

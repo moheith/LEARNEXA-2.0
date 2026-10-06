@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Check, Star } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
@@ -265,14 +266,14 @@ export default function FeedbackPage() {
                     key={star}
                     type="button"
                     onClick={() => setRating(star)}
-                    className={`text-3xl transition ${
+                    className={`transition ${
                       star <= rating
                         ? "text-yellow-400"
                         : "text-gray-300 dark:text-gray-600"
                     }`}
                     title={`${star} star`}
                   >
-                    ★
+                    <Star size={28} fill={star <= rating ? "currentColor" : "none"} strokeWidth={1.7} />
                   </button>
                 ))}
               </div>
@@ -300,7 +301,7 @@ export default function FeedbackPage() {
                       : ""
                   }`}
                 >
-                  ✓ Yes
+                  <span className="inline-flex items-center gap-2"><Check size={15} /> Yes</span>
                 </button>
 
                 <button

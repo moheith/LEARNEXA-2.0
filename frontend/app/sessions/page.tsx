@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CalendarDays, Check, Star, Target, X } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
@@ -384,7 +385,7 @@ export default function SessionsPage() {
           <div className="flex gap-4">
 
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
-              🎯
+              <Target size={19} strokeWidth={1.8} />
             </div>
 
             <div>
@@ -623,7 +624,7 @@ export default function SessionsPage() {
 
                   <div>
                     <p className="text-sm font-medium">
-                      ✓ Attend
+                      <span className="inline-flex items-center gap-2"><Check size={14} /> Attend</span>
                     </p>
 
                     <p className="text-xs text-slate-500">
@@ -633,7 +634,7 @@ export default function SessionsPage() {
 
                   <div>
                     <p className="text-sm font-medium">
-                      ✓ Complete
+                      <span className="inline-flex items-center gap-2"><Check size={14} /> Complete</span>
                     </p>
 
                     <p className="text-xs text-slate-500">
@@ -643,7 +644,7 @@ export default function SessionsPage() {
 
                   <div>
                     <p className="text-sm font-medium">
-                      ✓ Review
+                      <span className="inline-flex items-center gap-2"><Check size={14} /> Review</span>
                     </p>
 
                     <p className="text-xs text-slate-500">
@@ -736,7 +737,7 @@ export default function SessionsPage() {
               <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center dark:border-slate-700 dark:bg-slate-900 md:col-span-2">
 
                 <div className="text-3xl">
-                  📅
+                  <CalendarDays size={17} strokeWidth={1.8} />
                 </div>
 
                 <h3 className="mt-3 font-semibold text-slate-800 dark:text-white">
@@ -807,7 +808,7 @@ export default function SessionsPage() {
                       <div className="flex items-center gap-3 text-sm">
 
                         <span className="text-slate-400">
-                          📅
+                          <CalendarDays size={17} strokeWidth={1.8} />
                         </span>
 
                         <span className="text-slate-600 dark:text-slate-300">
@@ -821,7 +822,7 @@ export default function SessionsPage() {
                       <div className="flex items-center gap-3 text-sm">
 
                         <span className="text-slate-400">
-                          🎯
+                          <Target size={17} strokeWidth={1.8} />
                         </span>
 
                         <span className="text-slate-600 dark:text-slate-300">
@@ -862,7 +863,7 @@ export default function SessionsPage() {
                         >
                           {actionLoading === session.id
                             ? "Updating..."
-                            : "✓ Complete Session"}
+                            : "Complete Session"}
                         </button>
                       )}
 
@@ -879,7 +880,7 @@ export default function SessionsPage() {
                           }
                           className="rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-900 dark:hover:bg-red-950/30"
                         >
-                          Cancel
+                          <span className="inline-flex items-center gap-2"><X size={15} /> Cancel</span>
                         </button>
                       )}
 
@@ -889,7 +890,7 @@ export default function SessionsPage() {
                           href="/feedback"
                           className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                         >
-                          ⭐ Give Feedback
+                          <span className="inline-flex items-center gap-2"><Star size={15} /> Give Feedback</span>
                         </Link>
                       )}
 
@@ -918,7 +919,7 @@ export default function SessionsPage() {
                       <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-900 dark:bg-green-950/30">
 
                         <p className="text-sm font-semibold text-green-700 dark:text-green-400">
-                          ✓ Session completed
+                          <span className="inline-flex items-center gap-2"><Check size={15} /> Session completed</span>
                         </p>
 
                         <p className="mt-1 text-xs text-green-700 dark:text-green-400">

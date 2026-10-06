@@ -154,6 +154,45 @@ a {
   background: #374151;
 }
 
+/* Keep legacy Tailwind utility colors aligned with the product palette. */
+[class~="bg-white"] {
+  background-color: var(--card) !important;
+}
+
+[class~="bg-slate-50"] {
+  background-color: var(--background) !important;
+}
+
+[class~="bg-blue-600"],
+[class~="bg-violet-600"] {
+  background-color: var(--primary) !important;
+}
+
+[class~="hover:bg-blue-700"]:hover,
+[class~="hover:bg-violet-700"]:hover {
+  background-color: var(--primary-dark) !important;
+}
+
+[class~="text-blue-600"],
+[class~="text-blue-700"],
+[class~="text-violet-600"],
+[class~="text-violet-700"] {
+  color: var(--primary) !important;
+}
+
+[class~="border-blue-200"],
+[class~="border-violet-200"] {
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--border)) !important;
+}
+
+.dark [class~="dark:bg-slate-900"] {
+  background-color: var(--card) !important;
+}
+
+.dark [class~="dark:bg-slate-950"] {
+  background-color: var(--background) !important;
+}
+
 /* Small status labels */
 
 .status {
