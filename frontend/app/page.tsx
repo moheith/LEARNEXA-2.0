@@ -18,11 +18,10 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import BrandMark from "../components/BrandMark";
+import { getApiBaseUrl } from "../lib/config";
 import ThemeToggle from "./ThemeToggle";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "http://127.0.0.1:5000/api";
+const API_BASE = getApiBaseUrl();
 
 type Skill = {
   id: number;
@@ -68,6 +67,7 @@ export default function Dashboard() {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      setLoading(false);
       router.replace("/login");
       return;
     }

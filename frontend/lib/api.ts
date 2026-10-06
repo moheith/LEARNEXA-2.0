@@ -3,7 +3,7 @@
  * Centralized API communication with error handling and token management
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
+import { getApiBaseUrl } from "./config";
 
 export interface ApiResponse<T = any> {
   data?: T;
@@ -29,7 +29,7 @@ export async function apiRequest<T = any>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${getApiBaseUrl()}${endpoint}`;
     const token = getToken();
 
     const headers: Record<string, string> = {

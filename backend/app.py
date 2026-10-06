@@ -19,10 +19,10 @@ load_dotenv()
 app = Flask(__name__)
 
 # Frontend origins allowed during local development. Set CORS_ORIGINS in production.
-cors_origins = os.getenv(
-    "CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
-).split(",")
-CORS(app, origins=[origin.strip() for origin in cors_origins])
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+CORS(app) if "*" in cors_origins else CORS(
+    app, origins=[origin.strip() for origin in cors_origins]
+)
 
 # SQLite keeps local setup simple; MySQL can be selected for deployment.
 db_type = os.getenv('DB_TYPE', 'sqlite')
@@ -423,4 +423,4 @@ with app.app_context():
         db.session.commit()
 
 if __name__=="__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
