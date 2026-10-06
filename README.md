@@ -8,7 +8,6 @@ LEARNEXA is a college-project web application for exchanging skills between stud
 LEARNEXA/
 ├── backend/
 │   ├── app.py                 Flask API, database models, and routes
-│   ├── seed_demo_data.py      Repeatable local demo-data seeder
 │   ├── requirements.txt       Python dependencies
 │   ├── .env.example            Backend configuration template
 │   └── instance/               Local SQLite database location
@@ -55,18 +54,6 @@ backend/instance/learnexa.db
 ```
 
 The local SQLite database is ignored by Git because it contains changing user data and should not be committed.
-
-### Add demo data
-
-To populate the local database with fictional Indian demo users, skills, requests, sessions, feedback, and wallets, run:
-
-```powershell
-.\\.venv\\Scripts\\python.exe backend\\seed_demo_data.py
-```
-
-The seeder is safe to run more than once. It skips demo records that already exist. All demo users use fictional `@demo.learnexa.local` email addresses and the shared demo password `LearnexaDemo@123`.
-
-The database file remains ignored by Git. GitHub receives the seeder script, so another computer can recreate the same demo dataset without publishing a live database or user records.
 
 ### Deployment: MySQL
 
