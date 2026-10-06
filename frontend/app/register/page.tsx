@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import BrandMark from "../../components/BrandMark";
 import ThemeToggle from "../ThemeToggle";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000/api";
@@ -64,11 +65,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
 
         <div className="mb-8 text-center">
-          <Link
-            href="/"
-            className="text-3xl font-bold text-violet-600"
-          >
-            LEARNEXA
+          <Link href="/" className="inline-flex justify-center">
+            <BrandMark />
           </Link>
 
           <p className="mt-3 text-slate-500">

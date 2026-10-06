@@ -17,6 +17,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import BrandMark from "../components/BrandMark";
 import ThemeToggle from "./ThemeToggle";
 
 const API_BASE =
@@ -299,19 +300,7 @@ export default function Dashboard() {
             href="/"
             className="group flex shrink-0 items-center gap-3 transition-transform duration-200 hover:scale-[1.03] active:scale-95"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white shadow-sm transition-transform duration-200 group-hover:rotate-3 group-hover:scale-105 group-active:scale-90">
-              L
-            </div>
-
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold tracking-tight">
-                LEARNEXA
-              </h1>
-
-              <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                Student Skill Exchange
-              </p>
-            </div>
+            <BrandMark />
           </Link>
 
           {/* Search */}

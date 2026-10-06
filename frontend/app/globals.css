@@ -9,6 +9,8 @@
   --border: #d6e3e0;
   --primary: #0f766e;
   --primary-dark: #115e59;
+  --button-bg: #0f766e;
+  --button-hover: #115e59;
   --accent: #f59e0b;
   --muted: #607572;
 }
@@ -20,6 +22,8 @@
   --border: #2b4b47;
   --primary: #5eead4;
   --primary-dark: #2dd4bf;
+  --button-bg: #0f766e;
+  --button-hover: #115e59;
   --accent: #fbbf24;
   --muted: #a9c2bd;
 }
@@ -126,13 +130,13 @@ a {
   border: none;
   border-radius: 7px;
   padding: 10px 16px;
-  background: var(--primary);
+  background: var(--button-bg);
   color: white;
   font-weight: 600;
 }
 
 .primary-button:hover {
-  background: var(--primary-dark);
+  background: var(--button-hover);
 }
 
 /* Secondary button */
@@ -165,12 +169,12 @@ a {
 
 [class~="bg-blue-600"],
 [class~="bg-violet-600"] {
-  background-color: var(--primary) !important;
+  background-color: var(--button-bg) !important;
 }
 
 [class~="hover:bg-blue-700"]:hover,
 [class~="hover:bg-violet-700"]:hover {
-  background-color: var(--primary-dark) !important;
+  background-color: var(--button-hover) !important;
 }
 
 [class~="text-blue-600"],
@@ -191,6 +195,36 @@ a {
 
 .dark [class~="dark:bg-slate-950"] {
   background-color: var(--background) !important;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--foreground);
+}
+
+.brand-mark-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 12%, var(--card));
+  color: var(--primary);
+}
+
+.brand-mark-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.brand-mark-compact .brand-mark-icon {
+  width: 32px;
+  height: 32px;
 }
 
 /* Small status labels */
