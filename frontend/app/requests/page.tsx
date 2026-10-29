@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getApiBaseUrl } from "../../lib/config";
-import ThemeToggle from "../ThemeToggle";
+import AppNav from "../../components/AppNav";
 
 const API_BASE = getApiBaseUrl();
 
@@ -152,29 +152,7 @@ export default function RequestsPage() {
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
 
-      <nav className="border-b bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-
-          <Link
-            href="/"
-            className="text-2xl font-bold text-violet-600"
-          >
-            LEARNEXA
-          </Link>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="hidden rounded-lg px-3 py-2 text-sm hover:bg-slate-100 sm:block dark:hover:bg-slate-800"
-            >
-              Dashboard
-            </Link>
-
-            <ThemeToggle />
-          </div>
-
-        </div>
-      </nav>
+      <AppNav />
 
       <section className="mx-auto max-w-6xl px-6 py-10">
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getApiBaseUrl } from "../../lib/config";
-import ThemeToggle from "../ThemeToggle";
+import AppNav from "../../components/AppNav";
 
 const API_BASE = getApiBaseUrl();
 
@@ -237,60 +237,7 @@ export default function WalletPage() {
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
 
-      {/* =================================================
-          NAVBAR
-      ================================================= */}
-
-      <header className="border-b border-[var(--border)] bg-[var(--card)]">
-        <div className="page-container flex min-h-[70px] items-center justify-between gap-4">
-
-          <Link
-            href="/"
-            className="text-xl font-bold tracking-wide"
-          >
-            LEARNEXA
-          </Link>
-
-          <nav className="hidden items-center gap-5 text-sm md:flex">
-            <Link href="/" className="hover:text-blue-600">
-              Dashboard
-            </Link>
-
-            <Link href="/profile" className="hover:text-blue-600">
-              Profile
-            </Link>
-
-            <Link href="/requests" className="hover:text-blue-600">
-              Requests
-            </Link>
-
-            <Link href="/sessions" className="hover:text-blue-600">
-              Sessions
-            </Link>
-
-            <Link href="/feedback" className="hover:text-blue-600">
-              Feedback
-            </Link>
-
-            <Link
-              href="/wallet"
-              className="font-semibold text-blue-600"
-            >
-              Wallet
-            </Link>
-
-            <ThemeToggle />
-
-            <button
-              onClick={logout}
-              className="secondary-button"
-            >
-              Logout
-            </button>
-          </nav>
-
-        </div>
-      </header>
+      <AppNav />
 
       {/* =================================================
           CONTENT

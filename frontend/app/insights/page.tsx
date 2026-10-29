@@ -87,7 +87,7 @@ export default function InsightsPage() {
         <div className="mt-6 grid gap-5 md:grid-cols-2">
           <section className="simple-card p-5">
             <h2 className="text-xl font-bold">Session goals</h2>
-            <div className="mt-3 flex gap-2">
+            <div className="mobile-form-row mt-3 flex gap-2">
               <input className="form-input" value={session} onChange={(event) => setSession(event.target.value)} placeholder="Session ID" />
               <input className="form-input" value={goal} onChange={(event) => setGoal(event.target.value)} placeholder="Goal" />
               <button className="primary-button" onClick={addGoal}>Add</button>
@@ -107,7 +107,7 @@ export default function InsightsPage() {
           <section className="simple-card p-5">
             <h2 className="text-xl font-bold">Keep learning</h2>
             <p className="mt-1 text-sm text-[var(--muted)]">Suggest a skill you would like to see in the exchange.</p>
-            <div className="mt-3 flex gap-2">
+            <div className="mobile-form-row mt-3 flex gap-2">
               <input className="form-input" value={name} onChange={(event) => setName(event.target.value)} placeholder="Skill name" />
               <input className="form-input" value={category} onChange={(event) => setCategory(event.target.value)} placeholder="Category" />
               <button className="primary-button" onClick={suggest}>Suggest</button>

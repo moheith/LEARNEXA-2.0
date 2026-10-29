@@ -293,7 +293,7 @@ export default function Dashboard() {
 
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
 
-        <div className="flex h-[76px] items-center gap-6 px-5 lg:px-8">
+        <div className="dashboard-header flex h-[76px] items-center gap-6 px-5 lg:px-8">
 
           {/* Logo */}
           <Link
@@ -489,7 +489,7 @@ export default function Dashboard() {
 
         <div className="min-w-0 flex-1">
 
-          <div className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+          <div className="dashboard-content mx-auto max-w-7xl px-5 py-8 lg:px-8">
 
             {/* Page heading */}
             <section className="mb-7">

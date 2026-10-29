@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Activity, Bell, CalendarDays, LayoutDashboard, MessageSquare, Shield, Star, WalletCards } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import BrandMark from "./BrandMark";
 import ThemeToggle from "../app/ThemeToggle";
 
 export default function AppNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
     try {
@@ -44,6 +45,9 @@ export default function AppNav() {
           {admin && <Link href="/admin" className={`app-nav-link ${pathname === "/admin" ? "app-nav-link-active" : ""}`}><Shield size={16} /> <span className="hidden sm:inline">Admin</span></Link>}
           <Link href="/profile" className={`app-nav-link ${pathname === "/profile" ? "app-nav-link-active" : ""}`}><span className="hidden sm:inline">Profile</span><span className="sm:hidden">Me</span></Link>
           <ThemeToggle />
+          <button type="button" className="app-logout" onClick={() => { localStorage.removeItem("token"); router.replace("/login"); }}>
+            Logout
+          </button>
         </nav>
       </div>
     </header>
