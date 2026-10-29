@@ -35,7 +35,7 @@ export default function AppNav() {
         <Link href="/" aria-label="LEARNEXA dashboard">
           <BrandMark compact />
         </Link>
-        <nav className="flex flex-1 flex-wrap items-center justify-end gap-1">
+        <nav className="app-nav-scroll flex flex-1 items-center justify-end gap-1">
           {links.map(([href, label, Icon]) => (
             <Link key={href} href={href} className={`app-nav-link ${pathname === href ? "app-nav-link-active" : ""}`}>
               <Icon size={16} /> <span className="hidden sm:inline">{label}</span>

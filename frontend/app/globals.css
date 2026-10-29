@@ -95,8 +95,18 @@ a {
 /* Common page container */
 
 .page-container {
-  width: min(1200px, 92%);
+  width: min(1220px, 94%);
   margin: 0 auto;
+}
+
+.app-nav-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+
+.app-nav-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .app-header {
@@ -154,7 +164,7 @@ a {
   width: 100%;
   padding: 11px 13px;
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: 10px;
   outline: none;
   background: var(--card);
   color: var(--foreground);
@@ -268,6 +278,26 @@ a {
   height: 32px;
 }
 
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+input:not([type="checkbox"]):not([type="radio"])::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 78%, transparent);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
+  outline: none;
+}
+
 /* Small status labels */
 
 .status {
@@ -276,4 +306,36 @@ a {
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .page-container {
+    width: min(100% - 28px, 620px);
+  }
+
+  .app-header .page-container {
+    align-items: flex-start;
+  }
+
+  .app-header .brand-mark-name {
+    display: none;
+  }
+
+  .app-nav-scroll {
+    justify-content: flex-start;
+    padding-bottom: 2px;
+  }
+
+  .app-nav-link {
+    padding: 8px;
+  }
+
+  .app-nav-link span {
+    display: none;
+  }
+
+  .secondary-button,
+  .primary-button {
+    min-height: 42px;
+  }
 }
