@@ -216,6 +216,16 @@ npm start
 | GET | `/api/wallet` | Read wallet and transactions |
 | POST | `/api/wallet/security` | Add a security amount |
 | POST | `/api/wallet/redeem` | Redeem reward points |
+| GET | `/api/goals` | List goals for the signed-in student's sessions |
+| POST/PATCH | `/api/goals` and `/api/goals/<id>` | Create or complete a goal |
+| GET/PATCH | `/api/notifications` and `/api/notifications/<id>` | List or mark notifications read |
+| GET/POST | `/api/conversations` | List or start conversations |
+| GET/POST | `/api/conversations/<id>/messages` | Read or send messages |
+| GET | `/api/calendar.ics` | Download the student's sessions as iCalendar |
+| GET | `/api/statistics` and `/api/reliability` | Read activity and completion metrics |
+| POST | `/api/reports` | Report another student |
+| GET/PATCH | `/api/admin/reports` and `/api/admin/reports/<id>` | Review or resolve reports (admin) |
+| GET | `/api/admin/dashboard` | Read aggregate dashboard counts (admin) |
 
 Protected endpoints require:
 
@@ -223,6 +233,25 @@ Protected endpoints require:
 Authorization: Bearer <JWT token>
 ```
 
+Run the backend API tests from the repository root with the standard library:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s backend\tests -v
+```
+
+The seeded administrator account for the local college demonstration is:
+
+```text
+Email: abc@gmail.com
+Password: abc
+```
+
+The admin dashboard is available at `/admin` after signing in with that
+account. It includes aggregate counts and tables for users, skills, skill
+assignments, requests, sessions, feedback, wallets, transactions,
+notifications, conversations, messages, goals, reports, and skill
+suggestions.
+
 ## Current Scope
 
-This is an educational MVP. The wallet is a demonstration points system, not a real payment system. A production version would need payment processing, database migrations, stronger secret management, automated tests, notifications, and deployment configuration.
+This is an educational MVP. The wallet is a demonstration points system, not a real payment system. A production version would need payment processing, database migrations, stronger secret management, and deployment configuration.

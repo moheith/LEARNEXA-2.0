@@ -32,6 +32,7 @@ export default function WalletPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [redeeming, setRedeeming] = useState<number | null>(null);
+  const [transactionFilter, setTransactionFilter] = useState("all");
 
   // =====================================================
   // LOAD WALLET
@@ -532,10 +533,15 @@ export default function WalletPage() {
             <p className="mt-1 text-sm text-[var(--muted)]">
               Your LEARNEXA wallet activity.
             </p>
+            <select className="form-input mt-4 max-w-xs" value={transactionFilter} onChange={(e) => setTransactionFilter(e.target.value)}>
+              <option value="all">All transactions</option>
+              <option value="security_deposit">Security deposits</option>
+              <option value="redeem">Reward redemptions</option>
+            </select>
           </div>
 
           {!wallet ||
-          wallet.transactions.length === 0 ? (
+          wallet.transactions.filter((t) => transactionFilter === "all" || t.type === transactionFilter).length === 0 ? (
 
             <div className="p-8 text-center text-sm text-[var(--muted)]">
               No transactions yet.
@@ -573,7 +579,7 @@ export default function WalletPage() {
 
                 <tbody>
 
-                  {wallet.transactions.map(
+                  {wallet.transactions.filter((t) => transactionFilter === "all" || t.type === transactionFilter).map(
                     (transaction) => (
                       <tr
                         key={transaction.id}

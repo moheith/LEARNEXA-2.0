@@ -395,6 +395,30 @@ export default function Dashboard() {
                 label="Wallet"
               />
 
+              <SidebarLink
+                href="/discover"
+                icon={Search}
+                label="Discover"
+              />
+
+              <SidebarLink
+                href="/messages"
+                icon={MessageSquareText}
+                label="Messages"
+              />
+
+              <SidebarLink
+                href="/notifications"
+                icon={Inbox}
+                label="Notifications"
+              />
+
+              <SidebarLink
+                href="/insights"
+                icon={CalendarDays}
+                label="Insights & Goals"
+              />
+
             </nav>
 
             {/* Sidebar bottom */}
@@ -598,7 +622,8 @@ export default function Dashboard() {
             {/* Recommendations */}
             <section className="mt-10">
 
-              <div>
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-teal-600">
                   AI Matching
                 </p>
@@ -610,6 +635,8 @@ export default function Dashboard() {
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   Students recommended according to your teaching and learning interests.
                 </p>
+                </div>
+                <Link href="/insights" className="secondary-button text-sm">View live statistics & reliability</Link>
               </div>
 
               {filteredRecommendations.length === 0 ? (
