@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check, Star } from "lucide-react";
 import { getApiBaseUrl } from "../../lib/config";
-import ThemeToggle from "../ThemeToggle";
+import AppNav from "../../components/AppNav";
 
 const API_BASE = getApiBaseUrl();
 
@@ -146,47 +146,7 @@ export default function FeedbackPage() {
 
   return (
     <main className="min-h-screen">
-      {/* Navigation */}
-      <header className="border-b bg-[var(--card)]">
-        <div className="page-container flex min-h-[70px] items-center justify-between gap-4">
-          <div>
-            <Link
-              href="/"
-              className="text-xl font-bold tracking-tight text-[var(--primary)]"
-            >
-              LEARNEXA
-            </Link>
-
-            <p className="hidden text-xs text-[var(--muted)] sm:block">
-              Student Skill Exchange
-            </p>
-          </div>
-
-          <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
-            <Link href="/" className="hover:text-[var(--primary)]">
-              Dashboard
-            </Link>
-
-            <Link href="/profile" className="hover:text-[var(--primary)]">
-              Profile
-            </Link>
-
-            <Link href="/requests" className="hover:text-[var(--primary)]">
-              Requests
-            </Link>
-
-            <Link href="/sessions" className="hover:text-[var(--primary)]">
-              Sessions
-            </Link>
-
-            <span className="font-semibold text-[var(--primary)]">
-              Feedback
-            </span>
-          </nav>
-
-          <ThemeToggle />
-        </div>
-      </header>
+      <AppNav />
 
       <div className="page-container py-8">
         {/* Page heading */}

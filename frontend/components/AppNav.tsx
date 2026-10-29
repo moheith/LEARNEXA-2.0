@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Activity, Bell, CalendarDays, LayoutDashboard, MessageSquare, Shield, WalletCards } from "lucide-react";
+import { Activity, Bell, CalendarDays, LayoutDashboard, MessageSquare, Shield, Star, WalletCards } from "lucide-react";
 import { usePathname } from "next/navigation";
+import BrandMark from "./BrandMark";
+import ThemeToggle from "../app/ThemeToggle";
 
 export default function AppNav() {
   const pathname = usePathname();
@@ -25,19 +27,23 @@ export default function AppNav() {
     ["/wallet", "Wallet", WalletCards],
     ["/discover", "Discover", LayoutDashboard],
     ["/insights", "Insights", Activity],
+    ["/feedback", "Feedback", Star],
   ] as const;
   return (
-    <header className="border-b border-[var(--border)] bg-[var(--card)]">
-      <div className="page-container flex flex-wrap items-center justify-between gap-3 py-3">
-        <Link href="/" className="font-extrabold tracking-widest text-[var(--primary)]">LEARNEXA</Link>
-        <nav className="flex flex-wrap items-center gap-1">
+    <header className="app-header">
+      <div className="page-container flex flex-wrap items-center justify-between gap-4 py-3">
+        <Link href="/" aria-label="LEARNEXA dashboard">
+          <BrandMark compact />
+        </Link>
+        <nav className="flex flex-1 flex-wrap items-center justify-end gap-1">
           {links.map(([href, label, Icon]) => (
-            <Link key={href} href={href} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm ${pathname === href ? "bg-[var(--primary)] text-white" : "hover:bg-[var(--background)]"}`}>
+            <Link key={href} href={href} className={`app-nav-link ${pathname === href ? "app-nav-link-active" : ""}`}>
               <Icon size={16} /> <span className="hidden sm:inline">{label}</span>
             </Link>
           ))}
-          {admin && <Link href="/admin" className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm hover:bg-[var(--background)]"><Shield size={16} /> Admin</Link>}
-          <Link href="/profile" className="rounded-lg px-3 py-2 text-sm hover:bg-[var(--background)]">Profile</Link>
+          {admin && <Link href="/admin" className={`app-nav-link ${pathname === "/admin" ? "app-nav-link-active" : ""}`}><Shield size={16} /> <span className="hidden sm:inline">Admin</span></Link>}
+          <Link href="/profile" className={`app-nav-link ${pathname === "/profile" ? "app-nav-link-active" : ""}`}><span className="hidden sm:inline">Profile</span><span className="sm:hidden">Me</span></Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

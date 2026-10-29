@@ -42,8 +42,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background-image: radial-gradient(circle at 10% 0%, rgba(20, 184, 166, 0.1), transparent 28rem),
-    radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.08), transparent 24rem);
+  background-image: radial-gradient(circle at 8% 0%, rgba(20, 184, 166, 0.13), transparent 30rem),
+    radial-gradient(circle at 92% 10%, rgba(245, 158, 11, 0.1), transparent 26rem);
+  background-attachment: fixed;
 }
 
 button,
@@ -98,13 +99,53 @@ a {
   margin: 0 auto;
 }
 
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.app-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.app-nav-link:hover {
+  background: color-mix(in srgb, var(--primary) 9%, var(--card));
+  color: var(--foreground);
+}
+
+.app-nav-link-active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.app-nav-link-active:hover {
+  background: var(--primary-dark);
+  color: #ffffff;
+}
+
 /* Simple card */
 
 .simple-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 12px 30px rgba(15, 118, 110, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 18px 45px rgba(15, 118, 110, 0.08);
+}
+
+.simple-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
 }
 
 /* Form fields */
@@ -128,7 +169,7 @@ a {
 
 .primary-button {
   border: none;
-  border-radius: 7px;
+  border-radius: 10px;
   padding: 10px 16px;
   background: var(--button-bg);
   color: white;
@@ -143,7 +184,7 @@ a {
 
 .secondary-button {
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: 10px;
   padding: 10px 16px;
   background: var(--card);
   color: var(--foreground);
