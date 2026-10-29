@@ -23,6 +23,22 @@ LEARNEXA/
 └── README.md
 ```
 
+## Requirements
+
+The project is tested with these runtime versions:
+
+- **Python 3.10.6** for the Flask backend. Python 3.10 or newer is recommended.
+- **Node.js 20.9.0 or newer** for the Next.js frontend.
+- **npm 11.19.0** (the npm version used for the current frontend lockfile).
+- SQLite for local development, included with Python.
+
+The backend dependency versions are pinned in
+[backend/requirements.txt](backend/requirements.txt). Install them into a
+virtual environment rather than into the system Python installation. The
+frontend dependency versions are declared in
+[frontend/package.json](frontend/package.json) and locked in
+[frontend/package-lock.json](frontend/package-lock.json).
+
 ## How The Application Works
 
 1. The user registers through the Next.js frontend.
@@ -125,6 +141,8 @@ Open PowerShell in the project folder:
 
 ```powershell
 cd C:\LEARNEXA
+python --version
+node --version
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r backend\requirements.txt

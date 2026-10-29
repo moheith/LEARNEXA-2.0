@@ -39,6 +39,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 SECRET = os.getenv("JWT_SECRET", "learnexa-demo-secret")
 
+def json_body():
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else None
+
 # -----------------------------------------------------------------------------
 # Database models
 # -----------------------------------------------------------------------------
@@ -140,7 +144,9 @@ def health():
 
 @app.post("/api/register")
 def register():
-    data = request.json or {}
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}), 400
     name = str(data.get("name", "")).strip()
     email = str(data.get("email", "")).strip().lower()
     password = str(data.get("password", ""))
@@ -156,9 +162,13 @@ def register():
 
 @app.post("/api/login")
 def login():
-    data = request.json or {}
-    u = User.query.filter_by(email=data.get("email","").lower()).first()
-    if not u or not check_password_hash(u.password_hash, data.get("password","")):
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}), 400
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", ""))
+    u = User.query.filter_by(email=email).first()
+    if not u or not check_password_hash(u.password_hash, password):
         return jsonify({"error":"Invalid email or password"}), 401
     return jsonify({"token":token_for(u.id),"user":{"id":u.id,"name":u.name,"email":u.email}})
 
@@ -178,7 +188,13 @@ def skills():
 @app.post("/api/profile")
 @auth_required
 def profile(user):
-    data = request.json or {}
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}), 400
+    for typ in ("teach", "learn"):
+        skill_ids = data.get(typ, data.get(f"{typ}_skills", []))
+        if not isinstance(skill_ids, list):
+            return jsonify({"error":f"{typ} must be a list of skill IDs"}),400
     user.bio = data.get("bio", user.bio)
     user.availability = data.get("availability", user.availability)
     db.session.commit()
@@ -224,8 +240,13 @@ def recommendations(user):
 @app.post("/api/requests")
 @auth_required
 def create_request(user):
-    data=request.json or {}
-    receiver=db.session.get(User, data.get("receiver_id"))
+    data=json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
+    receiver_id=data.get("receiver_id")
+    if not isinstance(receiver_id, int):
+        return jsonify({"error":"A valid receiver is required"}),400
+    receiver=db.session.get(User, receiver_id)
     if not receiver or receiver.id==user.id: return jsonify({"error":"Invalid receiver"}),400
     r=ExchangeRequest(sender_id=user.id, receiver_id=receiver.id, message=data.get("message",""))
     db.session.add(r); db.session.commit()
@@ -250,7 +271,10 @@ def get_requests(user):
 def update_request(user,rid):
     r=db.session.get(ExchangeRequest,rid)
     if not r or r.receiver_id!=user.id: return jsonify({"error":"Request not found"}),404
-    status=(request.json or {}).get("status")
+    data=json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
+    status=data.get("status")
     if status not in ["accepted","rejected"]: return jsonify({"error":"Invalid status"}),400
     r.status=status; db.session.commit()
     return jsonify({"message":"Request updated"})
@@ -262,8 +286,13 @@ def update_request(user,rid):
 @app.post("/api/sessions")
 @auth_required
 def create_session(user):
-    data=request.json or {}
-    rid=data.get("request_id"); r=db.session.get(ExchangeRequest,rid)
+    data=json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
+    rid=data.get("request_id")
+    if not isinstance(rid, int):
+        return jsonify({"error":"A valid request is required"}),400
+    r=db.session.get(ExchangeRequest,rid)
     if not r or user.id not in [r.sender_id,r.receiver_id] or r.status!="accepted":
         return jsonify({"error":"Accepted request required"}),400
     try: dt=datetime.fromisoformat(data["session_date"])
@@ -283,8 +312,13 @@ def sessions(user):
 @app.post("/api/feedback")
 @auth_required
 def feedback(user):
-    data=request.json or {}
-    s=db.session.get(Session,data.get("session_id"))
+    data=json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
+    session_id=data.get("session_id")
+    if not isinstance(session_id, int):
+        return jsonify({"error":"A valid session is required"}),400
+    s=db.session.get(Session,session_id)
     if not s: return jsonify({"error":"Session not found"}),404
     r=db.session.get(ExchangeRequest,s.request_id)
     if not r or user.id not in [r.sender_id, r.receiver_id]:
@@ -335,7 +369,9 @@ def get_wallet(user):
 @app.post("/api/wallet/security")
 @auth_required
 def add_security_amount(user):
-    data = request.json or {}
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
     amount = data.get("amount")
     try:
         amount = float(amount)
@@ -359,7 +395,9 @@ def add_security_amount(user):
 @app.post("/api/wallet/redeem")
 @auth_required
 def redeem_points(user):
-    data = request.json or {}
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
     points = data.get("points")
     try:
         points = int(points)
@@ -391,7 +429,10 @@ def update_session(user, sid):
     if not r or user.id not in [r.sender_id, r.receiver_id]:
         return jsonify({"error": "Session not found"}), 404
 
-    status = (request.json or {}).get("status")
+    data = json_body()
+    if data is None:
+        return jsonify({"error":"A JSON object is required"}),400
+    status = data.get("status")
     if status not in ["completed", "cancelled"]:
         return jsonify({"error": "Invalid status"}), 400
     s.status = status
